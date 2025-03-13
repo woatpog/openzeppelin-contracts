@@ -8,7 +8,7 @@ Applies patches and invokes the transpiler with the command line flags we need f
 
 ## `transpile-onto.sh`
 
-```
+```bash
 bash scripts/upgradeable/transpile-onto.sh <target> [<base>]
 ```
 
