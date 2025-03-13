@@ -214,8 +214,7 @@ Note that roles do not define a name. As opposed to the xref:api:access.adoc#Acc
 ```javascript
 await manager.labelRole(MINTER, "MINTER");
 ```
-
-Given the admins of the `AccessManaged` can modify all of its permissions, it's recommended to keep only a single admin address secured under a multisig or governance layer. To achieve this, it is possible for the initial admin to set up all the required permissions, targets, and functions, assign a new admin, and finally renounce its admin role.
+Given that the admins of the `AccessManaged` contract can modify all of its permissions, it's recommended to keep only a single admin address secured under a multisig or governance layer. To achieve this, the initial admin can set up all the required permissions, targets, and functions, assign a new admin, and finally renounce its admin role.
 
 For improved incident response coordination, the manager includes a mode where administrators can completely close a target contract. When closed, all calls to restricted target functions in a target contract will revert.
 
