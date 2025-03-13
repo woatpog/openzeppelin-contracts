@@ -90,29 +90,26 @@ The JSON document for token ID 2 might look something like:
 }
 ----
 
-For more information about the metadata JSON Schema, check out the https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema[ERC-1155 Metadata URI JSON Schema].
+For more information about the metadata JSON Schema, check out the [ERC-1155 Metadata URI JSON Schema](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema).
 
-NOTE: You'll notice that the item's information is included in the metadata, but that information isn't on-chain! So a game developer could change the underlying metadata, changing the rules of the game!
+**NOTE:** You'll notice that the item's information is included in the metadata, but that information isn't on-chain! So a game developer could change the underlying metadata, changing the rules of the game!
 
-TIP: If you'd like to put all item information on-chain, you can extend ERC-721 to do so (though it will be rather costly) by providing a xref:utilities.adoc#base64[`Base64`] Data URI with the JSON schema encoded. You could also leverage IPFS to store the URI information, but these techniques are out of the scope of this overview guide
+**TIP:** If you'd like to put all item information on-chain, you can extend ERC-721 to do so (though it will be rather costly) by providing a [`Base64`](xref:utilities.adoc#base64) Data URI with the JSON schema encoded. You could also leverage IPFS to store the URI information, but these techniques are out of the scope of this overview guide.
 
-[[sending-to-contracts]]
-== Sending Tokens to Contracts
+## Sending Tokens to Contracts
 
-A key difference when using xref:api:token/ERC1155.adoc#IERC1155-safeTransferFrom-address-address-uint256-uint256-bytes-[`safeTransferFrom`] is that token transfers to other contracts may revert with the following custom error:
+A key difference when using [`safeTransferFrom`](xref:api:token/ERC1155.adoc#IERC1155-safeTransferFrom-address-address-uint256-uint256-bytes-) is that token transfers to other contracts may revert with the following custom error:
 
-[source,text]
-----
+```
 ERC1155InvalidReceiver("<ADDRESS>")
-----
+```
 
-This is a good thing! It means that the recipient contract has not registered itself as aware of the ERC-1155 protocol, so transfers to it are disabled to *prevent tokens from being locked forever*. As an example, https://etherscan.io/token/0xa74476443119A942dE498590Fe1f2454d7D4aC0d?a=0xa74476443119A942dE498590Fe1f2454d7D4aC0d[the Golem contract currently holds over 350k `GNT` tokens], and lacks methods to get them out of there. This has happened to virtually every ERC20-backed project, usually due to user error.
+This is a good thing! It means that the recipient contract has not registered itself as aware of the ERC-1155 protocol, so transfers to it are disabled to *prevent tokens from being locked forever*. As an example, [the Golem contract currently holds over 350k `GNT` tokens](https://etherscan.io/token/0xa74476443119A942dE498590Fe1f2454d7D4aC0d?a=0xa74476443119A942dE498590Fe1f2454d7D4aC0d), and lacks methods to get them out of there. This has happened to virtually every ERC20-backed project, usually due to user error.
 
-In order for our contract to receive ERC-1155 tokens we can inherit from the convenience contract xref:api:token/ERC1155.adoc#ERC1155Holder[`ERC1155Holder`] which handles the registering for us. However, we need to remember to implement functionality to allow tokens to be transferred out of our contract:
+In order for our contract to receive ERC-1155 tokens, we can inherit from the convenience contract [`ERC1155Holder`](xref:api:token/ERC1155.adoc#ERC1155Holder) which handles the registering for us. However, we need to remember to implement functionality to allow tokens to be transferred out of our contract:
 
-[source,solidity]
-----
-include::api:example$token/ERC1155/MyERC115HolderContract.sol[]
-----
+```solidity
+include::api:example$token/ERC1155/MyERC1155HolderContract.sol[]
+```
 
-We can also implement more complex scenarios using the xref:api:token/ERC1155.adoc#IERC1155Receiver-onERC1155Received-address-address-uint256-uint256-bytes-[`onERC1155Received`] and xref:api:token/ERC1155.adoc#IERC1155Receiver-onERC1155BatchReceived-address-address-uint256---uint256---bytes-[`onERC1155BatchReceived`] functions.
+We can also implement more complex scenarios using the [`onERC1155Received`](xref:api:token/ERC1155.adoc#IERC1155Receiver-onERC1155Received-address-address-uint256-uint256-bytes-) and [`onERC1155BatchReceived`](xref:api:token/ERC1155.adoc#IERC1155Receiver-onERC1155BatchReceived-address-address-uint256---uint256---bytes-) functions.
